@@ -134,7 +134,7 @@ fun AboutScreen() {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/antivirus-m3/antivirus-m3"))
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/chumianyi/antivirus-m3"))
                     context.startActivity(intent)
                 },
             colors = CardDefaults.cardColors(
@@ -149,7 +149,7 @@ fun AboutScreen() {
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text("GitHub 仓库", fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onPrimaryContainer)
-                    Text("github.com/antivirus-m3/antivirus-m3", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f))
+                    Text("github.com/chumianyi/antivirus-m3", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f))
                 }
                 Icon(Icons.Filled.Description, contentDescription = null, tint = MaterialTheme.colorScheme.onPrimaryContainer)
             }

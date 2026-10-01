@@ -2,6 +2,10 @@
 
 一款基于 Material 3 设计的安卓杀毒软件，采用 Jetpack Compose 构建。
 
+## 下载
+
+[📥 下载 APK v1.0.0](https://github.com/chumianyi/antivirus-m3/releases/download/v1.0.0/antivirus-m3-v1.0.0.apk)
+
 ## 功能特性
 
 ### 三种防护模式
