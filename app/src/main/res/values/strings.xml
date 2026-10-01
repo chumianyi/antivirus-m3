@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">安全护盾</string>
+    <string name="accessibility_service_label">安全护盾实时防护</string>
+    <string name="home">主页</string>
+    <string name="scan">扫毒</string>
+    <string name="about">关于</string>
+</resources>
