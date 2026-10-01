@@ -5,7 +5,14 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.os.Environment
 import com.antivirus.m3.util.PreferencesManager
+import java.io.File
+import java.io.FileWriter
+import java.io.PrintWriter
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AntivirusApp : Application() {
     lateinit var preferences: PreferencesManager
@@ -14,8 +21,56 @@ class AntivirusApp : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-        preferences = PreferencesManager(this)
-        createNotificationChannels()
+
+        // Global crash handler - write logs to file instead of crashing silently
+        val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            try {
+                writeCrashLog(throwable)
+            } catch (_: Exception) {}
+            defaultHandler?.uncaughtException(thread, throwable)
+        }
+
+        try {
+            preferences = PreferencesManager(this)
+        } catch (e: Exception) {
+            // Fallback - preferences might fail on some devices
+        }
+
+        try {
+            createNotificationChannels()
+        } catch (e: Exception) {
+            // Notification channels might fail
+        }
+    }
+
+    private fun writeCrashLog(throwable: Throwable) {
+        try {
+            val dir = File(getExternalFilesDir(null), "crash_logs")
+            if (!dir.exists()) dir.mkdirs()
+            val timestamp = SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.getDefault()).format(Date())
+            val file = File(dir, "crash_$timestamp.txt")
+            PrintWriter(FileWriter(file)).use { pw ->
+                pw.println("=== Antivirus M3 Crash Report ===")
+                pw.println("Time: ${Date()}")
+                pw.println("App Version: 1.0.0")
+                pw.println("Android: ${Build.VERSION.RELEASE} (API ${Build.VERSION.SDK_INT})")
+                pw.println("Device: ${Build.MANUFACTURER} ${Build.MODEL}")
+                pw.println()
+                pw.println("Exception: ${throwable.javaClass.name}")
+                pw.println("Message: ${throwable.message}")
+                pw.println()
+                pw.println("Stack Trace:")
+                throwable.printStackTrace(pw)
+                var cause = throwable.cause
+                while (cause != null) {
+                    pw.println()
+                    pw.println("Caused by: ${cause.javaClass.name}: ${cause.message}")
+                    cause.printStackTrace(pw)
+                    cause = cause.cause
+                }
+            }
+        } catch (_: Exception) {}
     }
 
     private fun createNotificationChannels() {
